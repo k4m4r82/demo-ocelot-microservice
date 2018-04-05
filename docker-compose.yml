@@ -1,0 +1,47 @@
+version: "3"
+
+volumes:
+  pgdata:
+
+services:
+
+  book-store-db:
+     image: rudi/book-store-db
+     build:
+      context: ./BookStore.Database
+      dockerfile: Dockerfile
+     environment:
+       - POSTGRES_USER = postgres   
+       - POSTGRES_PASSWORD = masterkey
+     volumes:
+       - pgdata:/var/lib/postgresql/data
+  
+  customer-service:
+    image: rudi/customer-service
+    build:
+      context: ./BookStore.CustomerService
+      dockerfile: Dockerfile
+    environment:
+      - DBHOST=book-store-db
+      - DBPORT=5432
+     
+  book-catalog-service:
+    image: rudi/book-catalog-service
+    build:
+      context: ./BookStore.BookCatalogService
+      dockerfile: Dockerfile
+    environment:
+      - DBHOST=book-store-db
+      - DBPORT=5432
+    depends_on:
+      - book-store-db
+      
+  api-gateway-service:
+    image: rudi/api-gateway-service
+    build:
+      context: ./BookStore.APIGatewayService
+      dockerfile: Dockerfile
+    ports: 
+      - 9000:80    
+    depends_on:
+      - book-store-db
