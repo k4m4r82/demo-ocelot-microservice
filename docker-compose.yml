@@ -24,7 +24,9 @@ services:
     environment:
       - DBHOST=book-store-db
       - DBPORT=5432
-     
+    depends_on:
+      - book-store-db
+      
   book-catalog-service:
     image: rudi/book-catalog-service
     build:
