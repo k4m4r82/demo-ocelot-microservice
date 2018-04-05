@@ -42,6 +42,4 @@ services:
       context: ./BookStore.APIGatewayService
       dockerfile: Dockerfile
     ports: 
-      - 9000:80    
-    depends_on:
-      - book-store-db
+      - 9000:80        
